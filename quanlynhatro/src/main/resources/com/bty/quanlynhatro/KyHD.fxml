@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="613.0" prefWidth="607.0" styleClass="KyHD" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bty.quanlynhatro.KyHDController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" prefWidth="188.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="426.0" minWidth="10.0" prefWidth="358.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="HỢP ĐỒNG THUÊ TRỌ" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="* Thông tin khách thuê" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Label alignment="CENTER" styleClass="text" text="Họ và tên :" GridPane.rowIndex="2" />
+      <Label styleClass="text" text="Số điện thoại :" GridPane.rowIndex="3" />
+      <Label styleClass="text" text="CCCD/CMND :" GridPane.rowIndex="4" />
+      <Label styleClass="text" text="Địa chỉ thường trú :" GridPane.rowIndex="5" />
+      <Label styleClass="text" text="Phòng thuê :" GridPane.rowIndex="6" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="* Thông tin hợp đồng" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Label fx:id="txtHoTen" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label fx:id="txtSDT" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label fx:id="txtCCCD" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label fx:id="txtDiaChi" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label fx:id="txtTenphong" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Label styleClass="text" text="Mã HĐ :" GridPane.rowIndex="8" />
+      <Label styleClass="text" text="Ngày lập hợp đồng :" GridPane.rowIndex="9" />
+      <Label styleClass="text" text="Thời hạn thuê (tháng) :" GridPane.rowIndex="11" />
+      <Label styleClass="text" text="Số tiền đã cọc (VND) :" GridPane.rowIndex="12" />
+      <Label styleClass="text" text="Điều khoản hợp đồng :" GridPane.rowIndex="14" />
+      <CheckBox fx:id="CB" mnemonicParsing="false" text="Chấp nhận các điều khoản của hợp đồng" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.rowIndex="16" GridPane.valignment="CENTER" />
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+      <HBox prefHeight="51.0" prefWidth="549.0" styleClass="Button" GridPane.columnSpan="2147483647" GridPane.rowIndex="17">
+         <children>
+            <Button mnemonicParsing="false" onAction="#backToPhongtro" styleClass="back" text="Quay lại" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#XacNhanthueHandler" styleClass="next" text="Ký hợp đồng">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </HBox>
+      <Label fx:id="txtMaHD" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <DatePicker fx:id="NgayLap" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+      <TextField fx:id="TienCoc" GridPane.columnIndex="1" GridPane.rowIndex="12">
+         <GridPane.margin>
+            <Insets right="200.0" />
+         </GridPane.margin>
+      </TextField>
+      <TextArea prefHeight="200.0" prefWidth="200.0" text="Điều 1: Thông tin về phòng trọ&#10;&#10;Địa chỉ phòng trọ: [Địa chỉ nhà trọ]&#10;Diện tích: [Diện tích] m²&#10;Trang thiết bị đi kèm: [Danh sách thiết bị]&#10;Điều 2: Thời hạn thuê&#10;&#10;Thời gian thuê: Từ [ngày/tháng/năm] đến [ngày/tháng/năm].&#10;Sau khi hết hạn, hai bên có thể thỏa thuận gia hạn hợp đồng.&#10;Điều 3: Giá thuê và phương thức thanh toán&#10;&#10;Giá thuê phòng: [Số tiền] VNĐ/tháng.&#10;Tiền cọc: [Số tiền] VNĐ.&#10;Phương thức thanh toán: [Tiền mặt/chuyển khoản] trước ngày [ngày] hàng tháng.&#10;Điều 4: Quyền và nghĩa vụ của bên cho thuê&#10;&#10;Đảm bảo phòng trọ trong tình trạng tốt trước khi bàn giao.&#10;Cung cấp các dịch vụ như điện, nước, internet nếu có.&#10;Không can thiệp vào đời sống cá nhân của bên thuê nếu không có lý do chính đáng.&#10;Điều 5: Quyền và nghĩa vụ của bên thuê&#10;&#10;Thanh toán tiền thuê đúng hạn.&#10;Giữ gìn phòng trọ và tài sản trong phòng.&#10;Không sửa chữa, thay đổi kết cấu phòng nếu chưa có sự đồng ý của bên cho thuê.&#10;Không cho người khác thuê lại hoặc ở ghép nếu chưa có sự đồng ý của bên cho thuê.&#10;Điều 6: Chấm dứt hợp đồng&#10;&#10;Hợp đồng có thể chấm dứt nếu:&#10;Hết thời hạn mà không gia hạn.&#10;Một trong hai bên vi phạm điều khoản hợp đồng.&#10;Bên thuê báo trước ít nhất [thời gian] ngày nếu muốn chấm dứt hợp đồng sớm.&#10;Điều 7: Điều khoản khác&#10;&#10;Hai bên cam kết thực hiện đúng các điều khoản trong hợp đồng.&#10;Hợp đồng này có hiệu lực từ ngày ký và được lập thành 02 bản có giá trị pháp lý như nhau, mỗi bên giữ một bản.&#10;" GridPane.columnIndex="1" GridPane.rowIndex="14" GridPane.rowSpan="2">
+         <GridPane.margin>
+            <Insets top="3.0" />
+         </GridPane.margin>
+      </TextArea>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER">
+         <children>
+            <TextField fx:id="ThoiHan" prefHeight="25.0" prefWidth="147.0">
+               <HBox.margin>
+                  <Insets top="3.0" />
+               </HBox.margin>
+            </TextField>
+            <Label text="(Tối thiểu 3 tháng)">
+               <HBox.margin>
+                  <Insets left="10.0" top="5.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <Label styleClass="text" text="Số lượng người thuê :" GridPane.rowIndex="10" />
+      <TextField fx:id="SoLuongNguoiThue" GridPane.columnIndex="1" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets right="200.0" />
+         </GridPane.margin>
+      </TextField>
+      <Label styleClass="text" text="Chu kỳ thanh toán :" GridPane.rowIndex="13" />
+      <TextField fx:id="ChuKyThanhToan" GridPane.columnIndex="1" GridPane.rowIndex="13">
+         <GridPane.margin>
+            <Insets right="200.0" />
+         </GridPane.margin>
+      </TextField>
+   </children>
+</GridPane>

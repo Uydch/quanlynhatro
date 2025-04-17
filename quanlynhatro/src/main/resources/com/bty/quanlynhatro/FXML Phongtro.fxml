@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="442.0" prefWidth="762.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bty.quanlynhatro.FXMLPhongtroController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="413.0" minWidth="10.0" prefWidth="386.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="134.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="270.0" minWidth="10.0" prefWidth="231.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints maxHeight="62.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="125.0" minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="151.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="211.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="389.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="220.0" minHeight="6.0" prefHeight="58.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="220.0" minHeight="10.0" prefHeight="74.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="Đăng ký thuê phòng" wrappingWidth="292.13671875" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <TableView fx:id="tbPhongtro" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3" GridPane.rowSpan="4" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="DANH SÁCH PHÒNG TRỌ   " wrappingWidth="265.13671875" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Text>
+      <Accordion />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nhập thông tin người thuê" wrappingWidth="243.13671875" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Label text="Họ và tên : " GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label text="Số điện thoại :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label text="CCCD/CMND :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label text="Địa chỉ thường trú :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label text="Phòng thuê :" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button mnemonicParsing="false" onAction="#DangkythueHandler" styleClass="next" text="Tiếp tục" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <TextField fx:id="txtHoTen" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="txtSDT" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="txtCCCD" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="4">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="txtDiaChi" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="5">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="txtTenphong" alignment="CENTER" promptText="Chọn từ danh sách" GridPane.columnIndex="2" GridPane.rowIndex="6">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="txtKeyword" promptText="Tìm kiếm" GridPane.rowIndex="2">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextField>
+      <Button mnemonicParsing="false" onAction="#backToPhongtro" styleClass="back" text="Quay về" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="themPhong" GridPane.rowIndex="7">
+         <children>
+            <TextField fx:id="addTenphong" alignment="CENTER" promptText="Tên phòng" />
+            <TextField fx:id="addGiathue" alignment="CENTER" promptText="Giá thuê" />
+            <Button mnemonicParsing="false" onAction="#themPhong" prefHeight="30.0" prefWidth="121.0" styleClass="back" text="Thêm phòng" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</GridPane>

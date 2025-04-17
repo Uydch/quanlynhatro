@@ -1,0 +1,47 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 11, 2025, 10:12:49 PM
+    Author     : User
+*/
+GridPane{
+    -fx-background-color:lightblue;
+}
+GridPane.KyHD{
+    -fx-background-color:white;
+    -fx-padding: 20 20 20 40;
+}
+
+Text.Subject{
+    -fx-font-size:30px;
+    -fx-fill:red;
+}
+
+Button.next{
+    -fx-background-color:green;
+    -fx-Text-fill:white;
+}
+
+Button.back{
+    -fx-background-color:blue;
+}
+
+Label.text{
+    -fx-font-size:18;
+}
+
+HBox.Button {
+    -fx-spacing: 40; /* Khoảng cách giữa các phần tử */
+    -fx-padding: 15 0 0 80; /* Căn giữa theo trục ngang */
+}
+
+HBox.themPhong{
+    -fx-spacing: 20;
+}
+
+Button{
+    -fx-background-color:red;
+    -fx-text-fill:white;
+}
