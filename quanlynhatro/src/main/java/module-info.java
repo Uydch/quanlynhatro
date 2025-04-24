@@ -8,4 +8,5 @@ module com.bty.quanlynhatro {
     exports com.bty.quanlynhatro;
     exports com.bty.service;
     exports com.bty.pojo;
+
 }

@@ -63,7 +63,7 @@ public class PhongtroServices {
         alert.setContentText("Vui lòng nhập đầy đủ thông tin!");
         alert.showAndWait();
     }
-
+    
     public boolean kiemTraTrangThaiPhong(Phongtro phongtro) {
         return "Trống".equalsIgnoreCase(phongtro.getTrangThai());
     }
