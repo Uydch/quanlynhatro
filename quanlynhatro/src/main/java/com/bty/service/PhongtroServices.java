@@ -35,7 +35,7 @@ public class PhongtroServices {
             }
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Phongtro q = new Phongtro(rs.getInt("Maphong"),rs.getString("TenPhong"),
+                Phongtro q = new Phongtro(rs.getInt("Maphong"), rs.getString("TenPhong"),
                         rs.getString("TrangThai"), rs.getInt("GiaThue"));
                 results.add(q);
             }
@@ -45,15 +45,15 @@ public class PhongtroServices {
 
     public boolean kiemTraThongTin(String hoTen, String sdt, String cccd, String diaChi, String tenPhong) {
         return !hoTen.trim().isEmpty()
-            && !sdt.trim().isEmpty()
-            && !cccd.trim().isEmpty()
-            && !diaChi.trim().isEmpty()
-            && !tenPhong.trim().isEmpty();
+                && !sdt.trim().isEmpty()
+                && !cccd.trim().isEmpty()
+                && !diaChi.trim().isEmpty()
+                && !tenPhong.trim().isEmpty();
     }
-    
+
     public boolean kiemTraThongTinThemPhong(String tenPhonng, String giaThue) {
         return !tenPhonng.trim().isEmpty()
-            && !giaThue.trim().isEmpty();
+                && !giaThue.trim().isEmpty();
     }
 
     public void hienThiThongBaoThieuThongTin() {
@@ -63,7 +63,7 @@ public class PhongtroServices {
         alert.setContentText("Vui lòng nhập đầy đủ thông tin!");
         alert.showAndWait();
     }
-    
+
     public boolean kiemTraTrangThaiPhong(Phongtro phongtro) {
         return "Trống".equalsIgnoreCase(phongtro.getTrangThai());
     }
@@ -74,7 +74,14 @@ public class PhongtroServices {
         alert.setContentText("Phòng này đã có người thuê, vui lòng chọn phòng khác!");
         alert.showAndWait();
     }
-
+    
+    public int chuanHoaThoiHan(int thoiHan) {
+        return thoiHan < 3 ? 3 : thoiHan;
+    }
+    
+    public void troioi(){}
+           
+    
     public boolean themPhong(Phongtro p) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareStatement("INSERT INTO phongtro (TenPhong, TrangThai,GiaThue)"
@@ -82,11 +89,11 @@ public class PhongtroServices {
             stm.setString(1, p.getTenPhong());
             stm.setString(2, "Trống");
             stm.setInt(3, p.getGiaThue());
-        return stm.executeUpdate() > 0;
+            return stm.executeUpdate() > 0;
         }
     }
-    
-    public boolean xoaPhong(int Maphong) throws SQLException{
+
+    public boolean xoaPhong(int Maphong) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareCall("DELETE FROM phongtro WHERE Maphong=?");
             stm.setInt(1, Maphong);

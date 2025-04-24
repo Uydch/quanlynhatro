@@ -141,8 +141,8 @@ public class ThanhtoanServices {
                 Thanhtoan t = new Thanhtoan(rs.getInt("MaThanhToan"), rs.getInt("MaPhong"), (int) rs.getDouble("SoTien"), rs.getDate("NgayThanhToan"),
                         rs.getInt("MaHopDong"), rs.getString("TenPhong"), rs.getInt("GiaThue"),
                         rs.getString("HoTen"), rs.getDate("NgayDenHan").toLocalDate(),
-                        rs.getDouble("PhiPhat"), rs.getString("TrangThai"), rs.getDouble("DuNo"),rs.getDouble("ChiSoDien"),
-                rs.getDouble("ChiSoNuoc"));
+                        rs.getDouble("PhiPhat"), rs.getString("TrangThai"), rs.getDouble("DuNo"), rs.getDouble("ChiSoDien"),
+                        rs.getDouble("ChiSoNuoc"));
                 results.add(t);
             }
         }
@@ -158,7 +158,7 @@ public class ThanhtoanServices {
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setDouble(1, (p.getTongTien() != null) ? p.getTongTien() : 0.0);
             stm.setDouble(2, (p.getPhiPhat() != null) ? p.getPhiPhat() : 0.0);
-            stm.setDouble(3, (p.getDuNo()!= null) ? p.getDuNo(): 0.0);
+            stm.setDouble(3, (p.getDuNo() != null) ? p.getDuNo() : 0.0);
             stm.setInt(4, p.getMaThanhToan());
             stm.addBatch(); // Tối ưu hiệu suất
             stm.executeBatch(); // Thực hiện batch update
@@ -233,9 +233,10 @@ public class ThanhtoanServices {
             stm.setDouble(1, ChiSoNuoc);
             stm.setInt(2, maThanhToan);
 
-            stm.executeUpdate(); 
+            stm.executeUpdate();
         }
     }
+
     public Optional<String> getThanhToanAmount(String tenPhong) {
         // Tạo một hộp thoại nhập số tiền thanh toán
         TextInputDialog dialog = new TextInputDialog();
@@ -244,14 +245,14 @@ public class ThanhtoanServices {
         dialog.setContentText("Nhập số tiền:");
         return dialog.showAndWait();
     }
- public void updateThanhToanStatus(int MaThanhToan, String status) {
+
+    public void updateThanhToanStatus(int MaThanhToan, String status) {
         String sql = "UPDATE thanhtoan SET TrangThai = ? WHERE MaThanhToan = ?";
-        
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, MaThanhToan);
-            
+
             // Thực thi câu lệnh
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {

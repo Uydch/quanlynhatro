@@ -49,25 +49,7 @@ public class KyHDServices {
 //        return results;
 //    }
     //
-    public void gioiHanThoiHanThue(TextField ThoiHan) {
-        ThoiHan.addEventFilter(KeyEvent.KEY_TYPED, event -> {
-            if (!event.getCharacter().matches("[0-9]")) {
-                event.consume();
-            }
-        });
-        ThoiHan.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                try {
-                    int value = Integer.parseInt(newValue);
-                    if (value < 3) {
-                        ThoiHan.setText("3");
-                    }
-                } catch (NumberFormatException e) {
-                    ThoiHan.setText(oldValue);
-                }
-            }
-        });
-    }
+   
 
     public void gioiHanTienCoc(TextField TienCoc) {
         TienCoc.addEventFilter(KeyEvent.KEY_TYPED, event -> {
@@ -186,5 +168,9 @@ public class KyHDServices {
         alert.setTitle("Thành Công!");
         alert.setContentText("Hợp đồng thuê phòng lưu thành công!!!");
         alert.showAndWait();
+    }
+    
+    public int chuanHoaThoiHan(int thoiHan) {
+        return thoiHan < 3 ? 3 : thoiHan;
     }
 }
