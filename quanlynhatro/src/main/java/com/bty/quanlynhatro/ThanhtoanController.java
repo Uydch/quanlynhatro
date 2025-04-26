@@ -79,6 +79,10 @@ public class ThanhtoanController implements Initializable {
             Thanhtoan p = event.getRowValue();
             try {
                 double soKiDien = event.getNewValue();
+                if (soKiDien < 0) {
+                    MessageBox.getBox("Thông báo", "Chỉ số điện không thể là số âm!", Alert.AlertType.WARNING);
+                    return;
+                }
                 t.capNhatTienDien(p.getMaThanhToan(), soKiDien);
                 double soKiDienThangTruoc = t.getChiSoDienThangTruoc(p.getMaPhong());
                 if (soKiDien < soKiDienThangTruoc) {
@@ -103,6 +107,10 @@ public class ThanhtoanController implements Initializable {
             Thanhtoan p = event.getRowValue();
             try {
                 double chiSoNuoc = event.getNewValue();
+                if (chiSoNuoc < 0) {
+                    MessageBox.getBox("Thông báo", "Chỉ số nước không thể là số âm!", Alert.AlertType.WARNING);
+                    return;
+                }
                 t.capNhatTienNuoc(p.getMaThanhToan(), chiSoNuoc);
                 double chiSoNuocThangTruoc = t.getChiSoNuocThangTruoc(p.getMaPhong());
                 if (chiSoNuoc < chiSoNuocThangTruoc) {
@@ -184,8 +192,16 @@ public class ThanhtoanController implements Initializable {
                 colTongtien, colDuNo, colTrangThai, colNgayDenHan, colThanhtoan);
     }
 
+    private boolean isValidInput(double value) {
+        return value >= 0; // Kiểm tra nếu giá trị nhập vào không phải là số âm
+    }
+
     private void tienPhat() throws SQLException {
         double phiPhatMoiNgay = Double.parseDouble(txtPhiphat.getText());
+        if (!isValidInput(phiPhatMoiNgay)) {
+            MessageBox.getBox("Lỗi", "Phí phạt không thể là số âm!", Alert.AlertType.WARNING);
+            return;
+        }
         for (Thanhtoan p : tbPhongDenHan.getItems()) {
             LocalDate ngayHienTai = LocalDate.now();
             LocalDate ngayDenHan = p.getNgayDenHan();
@@ -197,7 +213,6 @@ public class ThanhtoanController implements Initializable {
             } else {
                 p.setPhiPhat(0.0);
             }
-
         }
         tbPhongDenHan.refresh();
     }
@@ -207,18 +222,21 @@ public class ThanhtoanController implements Initializable {
     }
 
     private void tongTien() throws SQLException {
+        // Kiểm tra nếu giá tiền điện và nước nhập vào không phải số âm
         double giaTienDien = Double.parseDouble(txtTiendien.getText());
         double giaTienNuoc = Double.parseDouble(txtTiennuoc.getText());
 
+        if (!isValidInput(giaTienDien) || !isValidInput(giaTienNuoc)) {
+            MessageBox.getBox("Lỗi", "Giá tiền điện hoặc tiền nước không thể là số âm!", Alert.AlertType.WARNING);
+            return;
+        }
+
         for (Thanhtoan p : tbPhongDenHan.getItems()) {
-            int giathue = 0;
-            giathue = p.getGiaThue();
+            int giathue = p.getGiaThue();
             double soKiDienThangTruoc = t.getChiSoDienThangTruoc(p.getMaPhong());
-//            double tiendien = (p.getChiSoDien() - soKiDienThangTruoc) * giaTienDien;
             double tiendien = t.tinhTienDien(p.getChiSoDien(), soKiDienThangTruoc, giaTienDien);
 
             double chiSoNuocThangTruoc = t.getChiSoNuocThangTruoc(p.getMaPhong());
-//            double tiennuoc = (p.getChiSoNuoc()-chiSoNuocThangTruoc)*giaTienNuoc;
             double tiennuoc = t.tinhTienNuoc(p.getChiSoNuoc(), chiSoNuocThangTruoc, giaTienNuoc);
 
             double tienphat = (p.getPhiPhat() != null) ? p.getPhiPhat() : 0.0;
@@ -227,7 +245,8 @@ public class ThanhtoanController implements Initializable {
 
             t.updatePhongDenHanToThanhtoan(p);
         }
-        tbPhongDenHan.refresh();  // Cập nhật lại TableView
+        tbPhongDenHan.refresh();
+
     }
 
     private void loadTableData(String kw) throws SQLException {
@@ -241,12 +260,6 @@ public class ThanhtoanController implements Initializable {
         switchScene(event, "primary");
     }
 
-//    private void savePhongDenhan() throws SQLException{
-//        t.savePhongDenHanToThanhtoan();
-//        
-    ////        t.savePhongDenHanToThanhtoan(FXCollections.observableArrayList(tbPhongDenHan.getItems()));
-//    }
-    
     /**
      * Initializes the controller class.
      */
