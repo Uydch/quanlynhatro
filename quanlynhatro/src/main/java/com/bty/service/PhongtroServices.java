@@ -44,11 +44,20 @@ public class PhongtroServices {
     }
 
     public boolean kiemTraThongTin(String hoTen, String sdt, String cccd, String diaChi, String tenPhong) {
-        return !hoTen.trim().isEmpty()
-                && !sdt.trim().isEmpty()
-                && !cccd.trim().isEmpty()
-                && !diaChi.trim().isEmpty()
-                && !tenPhong.trim().isEmpty();
+        if (hoTen.trim().isEmpty() || sdt.trim().isEmpty() || cccd.trim().isEmpty() || diaChi.trim().isEmpty() || tenPhong.trim().isEmpty()) {
+            return false;
+        }
+        if (!kiemTraSdtHopLe(sdt)) {
+            System.out.println("Số điện thoại không hợp lệ. Phải là chuỗi số từ 10 đến 11 ký tự.");
+            return false;
+        }
+
+        if (!kiemTraCccdHopLe(cccd)) {
+            System.out.println("CCCD không hợp lệ. Phải là chuỗi số 12 ký tự.");
+            return false;
+        }
+
+        return true;
     }
 
     public boolean kiemTraThongTinThemPhong(String tenPhonng, String giaThue) {
@@ -60,7 +69,7 @@ public class PhongtroServices {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Thiếu thông tin");
         alert.setHeaderText(null);
-        alert.setContentText("Vui lòng nhập đầy đủ thông tin!");
+        alert.setContentText("Vui lòng nhập đầy đủ và chính xác thông tin!(sđt 10-12 số , cccd 12 số)");
         alert.showAndWait();
     }
 
@@ -74,12 +83,15 @@ public class PhongtroServices {
         alert.setContentText("Phòng này đã có người thuê, vui lòng chọn phòng khác!");
         alert.showAndWait();
     }
-    
-//    public int chuanHoaThoiHan(int thoiHan) {
-//        return thoiHan < 3 ? 3 : thoiHan;
-//    }
 
-    
+    public boolean kiemTraSdtHopLe(String sdt) {
+        return sdt.matches("\\d{10,11}");
+    }
+
+    public boolean kiemTraCccdHopLe(String cccd) {
+        return cccd.matches("\\d{12}");
+    }
+
     public boolean themPhong(Phongtro p) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareStatement("INSERT INTO phongtro (TenPhong, TrangThai,GiaThue)"

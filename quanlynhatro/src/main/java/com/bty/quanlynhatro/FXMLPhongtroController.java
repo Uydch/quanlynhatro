@@ -144,7 +144,6 @@ public class FXMLPhongtroController implements Initializable {
         });
     }
 
-    //Đăng ký thuê
     public void DangkythueHandler(ActionEvent e) {
         if (!s.kiemTraThongTin(
                 txtHoTen.getText(),
@@ -156,6 +155,7 @@ public class FXMLPhongtroController implements Initializable {
             s.hienThiThongBaoThieuThongTin();
             return;
         }
+        
         KyHDController controller = (KyHDController) switchScene(e, "KyHD");
         if (controller != null) {
             controller.setThongTinKhach(
