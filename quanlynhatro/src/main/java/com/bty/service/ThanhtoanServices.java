@@ -279,6 +279,8 @@ public class ThanhtoanServices {
         } catch (SQLException e) {
         }
     }
+    
+    
 
     public double tinhTienDien(double chiSoDien, double chiSoDienThangTruoc, double giaDien) {
         if (chiSoDien < chiSoDienThangTruoc || chiSoDien < 0) {
