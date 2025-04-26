@@ -62,12 +62,10 @@ public class PhongtroServicesTest {
         assertFalse(ketQua, "Không được cho thuê phòng đã có người.");
     }
 
-    
-//
 //    @Test
 //    public void testThoiHanHopDongBang3Thang() {
 //        int thoiHan = 3;
-//        boolean hopLe = s.kiemTraThoiHanHopDong(thoiHan);
+//        boolean hopLe = s.(thoiHan);
 //        assertTrue(hopLe, "Hợp đồng thuê 3 tháng trở lên là hợp lệ.");
 //    }
 //
@@ -77,4 +75,28 @@ public class PhongtroServicesTest {
 //        boolean hopLe = s.kiemTraThoiHanHopDong(thoiHan);
 //        assertTrue(hopLe, "Hợp đồng thuê 6 tháng là hợp lệ.");
 //    }
+    @Test
+    public void testKiemTraThongTin_HopLe() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong);
+        assertTrue(result, "Thông tin hợp lệ nhưng phương thức trả về false");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeHoTen() {
+        String hoTen = "";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong);
+
+        // Kiểm tra kết quả trả về là false khi thiếu tên
+        assertFalse(result, "Phương thức không phát hiện thiếu tên");
+    }
+
 }

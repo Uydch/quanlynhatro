@@ -254,7 +254,6 @@ public class ThanhtoanServices {
     }
 
     public Optional<String> getThanhToanAmount(String tenPhong) {
-        // Tạo một hộp thoại nhập số tiền thanh toán
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nhập số tiền thanh toán");
         dialog.setHeaderText("Phòng: " + tenPhong);
@@ -262,25 +261,25 @@ public class ThanhtoanServices {
         return dialog.showAndWait();
     }
 
-    public void updateThanhToanStatus(int MaThanhToan, String status) {
+    public boolean updateThanhToanStatus(int MaThanhToan, String status) {
         String sql = "UPDATE thanhtoan SET TrangThai = ? WHERE MaThanhToan = ?";
-
+        int rowsAffected = 0;
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, MaThanhToan);
-
-            // Thực thi câu lệnh
-            int rowsAffected = stmt.executeUpdate();
+            rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Cập nhật trạng thái thanh toán thành công!");
+                return true;
             } else {
                 System.out.println("Không tìm thấy mã thanh toán để cập nhật.");
+                return false;
+
             }
         } catch (SQLException e) {
         }
+        return rowsAffected > 0;
     }
-    
-    
 
     public double tinhTienDien(double chiSoDien, double chiSoDienThangTruoc, double giaDien) {
         if (chiSoDien < chiSoDienThangTruoc || chiSoDien < 0) {

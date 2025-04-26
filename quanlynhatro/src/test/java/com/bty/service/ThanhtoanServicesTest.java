@@ -321,55 +321,89 @@ public class ThanhtoanServicesTest {
 
     @Test
     public void testCapNhatTienDien_HopLe() throws SQLException {
-        int maThanhToan = 179; 
-        double chiSoDien = 100.0; 
+        int maThanhToan = 179;
+        double chiSoDien = 100.0;
 
         boolean actual = s.capNhatTienDien(maThanhToan, chiSoDien);
         assertTrue(actual);
     }
-    
+
     @Test
     public void testCapNhatTienDien_SaiMaThanhToan() throws SQLException {
-        int maThanhToan = 1; 
-        double chiSoDien = 100.0; 
+        int maThanhToan = 1;
+        double chiSoDien = 100.0;
 
         boolean actual = s.capNhatTienDien(maThanhToan, chiSoDien);
         assertTrue(actual);
     }
-    
+
     @Test
     public void testCapNhatTienDien_ChiSoDienAm() throws SQLException {
-        int maThanhToan = 1; 
-        double chiSoDien = -100.0; 
+        int maThanhToan = 1;
+        double chiSoDien = -100.0;
 
         boolean actual = s.capNhatTienDien(maThanhToan, chiSoDien);
         assertTrue(actual);
     }
-    
+
     @Test
     public void testCapNhatTienNuoc_HopLe() throws SQLException {
-        int maThanhToan = 179; 
-        double chiSoNuoc = 100.0; 
+        int maThanhToan = 179;
+        double chiSoNuoc = 100.0;
 
         boolean actual = s.capNhatTienNuoc(maThanhToan, chiSoNuoc);
         assertTrue(actual);
     }
-    
+
     @Test
     public void testCapNhatTienNuoc_SaiMaThanhToan() throws SQLException {
-        int maThanhToan = 1; 
-        double chiSoNuoc = 100.0; 
+        int maThanhToan = 1;
+        double chiSoNuoc = 100.0;
 
         boolean actual = s.capNhatTienDien(maThanhToan, chiSoNuoc);
         assertTrue(actual);
     }
-    
+
     @Test
     public void testCapNhatTienNuoc_ChiSoNuocAm() throws SQLException {
-        int maThanhToan = 1; 
-        double chiSoNuoc = -100.0; 
+        int maThanhToan = 1;
+        double chiSoNuoc = -100.0;
 
         boolean actual = s.capNhatTienDien(maThanhToan, chiSoNuoc);
         assertTrue(actual);
+    }
+
+    @Test
+    public void testUpdateThanhToanStatus() throws SQLException {
+        int maThanhToan = 179; 
+        String newStatus = "test status";
+        boolean actual = s.updateThanhToanStatus(maThanhToan, newStatus);
+        assertTrue(actual);
+        String sql = "SELECT TrangThai FROM thanhtoan WHERE MaThanhToan = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maThanhToan);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String trangThai = rs.getString("TrangThai");
+                assertEquals(newStatus, trangThai, "Trạng thái thanh toán không được cập nhật đúng");
+            }
+        }
+    }
+    
+    @Test
+    public void testUpdateThanhToanStatus_SaiMaThanhToan() throws SQLException {
+        int maThanhToan = 1000; 
+        String newStatus = "test status";
+        boolean actual = s.updateThanhToanStatus(maThanhToan, newStatus);
+        assertTrue(actual);
+        String sql = "SELECT TrangThai FROM thanhtoan WHERE MaThanhToan = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maThanhToan);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String trangThai = rs.getString("TrangThai");
+                assertEquals(newStatus, trangThai, "Trạng thái thanh toán không được cập nhật đúng");
+            }
+        }
     }
 }
