@@ -65,19 +65,19 @@ public class KyHDServices {
                 event.consume();
             }
         });
-        SoLuong.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                try {
-                    int value = Integer.parseInt(newValue);
-                    if (value < 1) {
-                        SoLuong.setText("3");
-                    }
-
-                } catch (NumberFormatException e) {
-                    SoLuong.setText(oldValue);
-                }
-            }
-        });
+//        SoLuong.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if (!newValue.isEmpty()) {
+//                try {
+//                    int value = Integer.parseInt(newValue);
+//                    if (value < 1) {
+//                        SoLuong.setText("3");
+//                    }
+//
+//                } catch (NumberFormatException e) {
+//                    SoLuong.setText(oldValue);
+//                }
+//            }
+//        });
     }
     
     public boolean kiemTraThongTin(String hoTen, String sdt, String cccd,
@@ -103,6 +103,7 @@ public class KyHDServices {
 
     //
     public int luuKhachthue(Khachthue k) throws SQLException {
+        
         String sql = "INSERT INTO khachthue (HoTen, CMND, SDT, DiaChi) VALUES (?, ?, ?, ?)";
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm1 = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

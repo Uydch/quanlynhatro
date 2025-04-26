@@ -4,7 +4,12 @@
  */
 package com.bty.service;
 
+import com.bty.pojo.JdbcUtils;
+import com.bty.pojo.Khachthue;
 import com.bty.pojo.Phongtro;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import static java.time.Clock.system;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -20,8 +25,255 @@ import java.sql.SQLException;
  */
 public class KyHDServicesTest {
 
+    private static KyHDServices s;
+    private static Connection conn;
+
+    @BeforeAll
+    public static void beforeAll() throws SQLException {
+        s = new KyHDServices();
+        conn = JdbcUtils.getConn();
+    }
+
+    @AfterAll
+    public static void aftereAll() throws SQLException {
+        if (conn != null) {
+            conn.close(); // Đảm bảo đóng kết nối khi kiểm thử hoàn tất
+        }
+    }
+
     @Test
-    public void test1() {
+    public void testKiemTraThongTin_HopLe() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+        assertTrue(result, "Thông tin hợp lệ nhưng phương thức trả về false");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeHoTen() {
+        String hoTen = "";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu họ tên");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeSdt() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu số điện thoại");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeCccd() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu CCCD");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeDiaChi() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu địa chỉ");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeTenPhong() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu tên phòng");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeThoiHan() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu thời hạn");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeTienCoc() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "";
+        String SoLuongNguoiThue = "2";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu tiền cọc");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeSoLuongNguoiThue() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "";
+        boolean CB = true;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu số lượng người thuê");
+    }
+
+    @Test
+    public void testKiemTraThongTin_TieuDeCheckBox() {
+        String hoTen = "Nguyen Van A";
+        String sdt = "0123456789";
+        String cccd = "123456789012";
+        String diaChi = "Hà Nội";
+        String tenPhong = "Phòng 101";
+        String thoiHan = "12 tháng";
+        String tienCoc = "1000000";
+        String SoLuongNguoiThue = "3";
+        boolean CB = false;
+
+        boolean result = s.kiemTraThongTin(hoTen, sdt, cccd, diaChi, tenPhong, thoiHan, tienCoc, SoLuongNguoiThue, CB);
+
+        assertFalse(result, "Phương thức không phát hiện thiếu số lượng người thuê");
+    }
+
+    @Test
+    public void testLuuKhachthue_HopLe() throws SQLException {
+        Khachthue k = new Khachthue();
+        k.setHoTen("Nguyen Van A");
+        k.setCMND("123456789012");
+        k.setSDT("0123456789");
+        k.setDiaChi("Hà Nội");
+
+        int id = s.luuKhachthue(k);
+
+        assertTrue(id > 0, "Khách thuê không được lưu thành công");
+
+        String sql = "SELECT * FROM khachthue WHERE MaKhach = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            assertTrue(rs.next(), "Không tìm thấy khách thuê trong cơ sở dữ liệu");
+            assertEquals("Nguyen Van A", rs.getString("HoTen"), "Tên khách thuê không đúng");
+            assertEquals("123456789012", rs.getString("CMND"), "CMND không đúng");
+            assertEquals("0123456789", rs.getString("SDT"), "Số điện thoại không đúng");
+            assertEquals("Hà Nội", rs.getString("DiaChi"), "Địa chỉ không đúng");
+        }
+    }
+
+    @Test
+    public void testLuuKhachthue_TieuDeHoTen() throws SQLException {
+        Khachthue k = new Khachthue();
+        k.setHoTen("");
+        k.setCMND("761207341826");
+        k.setSDT("8613972456");
+        k.setDiaChi("Hà Nội");
+
+        int id = s.luuKhachthue(k);
+
+        assertEquals(-1, id, "Phương thức không phát hiện thiếu tên khách");
+    }
+
+    @Test
+    public void testLuuKhachthue_TieuDeSDT() throws SQLException {
+        Khachthue k = new Khachthue();
+        k.setHoTen("Nguyen Van A");
+        k.setCMND("123456789012");
+        k.setSDT("");
+        k.setDiaChi("Hà Nội");
+
+        int id = s.luuKhachthue(k);
+
+        assertEquals(-1, id, "Phương thức không phát hiện thiếu số điện thoại");
+    }
+
+    @Test
+    public void testLuuKhachthue_TieuDeDiaChi() throws SQLException {
+        Khachthue k = new Khachthue();
+        k.setHoTen("Nguyen Van A");
+        k.setCMND("123456789012");
+        k.setSDT("0123456789");
+        k.setDiaChi("");
+
+        int id = s.luuKhachthue(k);
+
+        assertEquals(-1, id, "Phương thức không phát hiện thiếu địa chỉ");
+    }
+
+    @Test
+    public void testThoiHan_NhoHon3() {
         KyHDServices k = new KyHDServices();
         int thoihan = 2;
         int hople = k.chuanHoaThoiHan(thoihan);
@@ -29,7 +281,7 @@ public class KyHDServicesTest {
     }
 
     @Test
-    public void test2() {
+    public void testThoiHan_Bang3() {
         KyHDServices k = new KyHDServices();
         int thoihan = 3;
         int hople = k.chuanHoaThoiHan(thoihan);
@@ -37,13 +289,11 @@ public class KyHDServicesTest {
     }
 
     @Test
-    public void test3() {
+    public void testThoiHan_LonHon3() {
         KyHDServices k = new KyHDServices();
         int thoihan = 6;
         int hople = k.chuanHoaThoiHan(thoihan);
         assertEquals(thoihan, hople);
     }
-    
-    
 
 }
