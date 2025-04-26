@@ -36,14 +36,13 @@ public class PhongtroServicesTest {
     @AfterAll
     public static void aftereAll() throws SQLException {
         if (conn != null) {
-            conn.close(); // Đảm bảo đóng kết nối khi kiểm thử hoàn tất
+            conn.close(); 
         }
     }
 
     @Test
-    @DisplayName("Có keyword tồn tại")
     public void testGetPhongtroWithKeyword() throws SQLException {
-        String keyword = "101"; // từ khóa khớp với 1 tên phòng hoặc trạng thái đã có trong DB test
+        String keyword = "101"; 
         List<Phongtro> result = s.getPhongtro(keyword);
 
         assertNotNull(result);
@@ -54,7 +53,6 @@ public class PhongtroServicesTest {
     }
 
     @Test
-    @DisplayName("keyword rỗng")
     public void testGetPhongtroWithEmptyKeyword() throws SQLException {
         List<Phongtro> result = s.getPhongtro("");
         assertNotNull(result);
@@ -69,19 +67,6 @@ public class PhongtroServicesTest {
         assertFalse(ketQua, "Không được cho thuê phòng đã có người.");
     }
 
-//    @Test
-//    public void testThoiHanHopDongBang3Thang() {
-//        int thoiHan = 3;
-//        boolean hopLe = s.(thoiHan);
-//        assertTrue(hopLe, "Hợp đồng thuê 3 tháng trở lên là hợp lệ.");
-//    }
-//
-//    @Test
-//    public void testThoiHanHopDongLonHon3Thang() {
-//        int thoiHan = 6;
-//        boolean hopLe = s.kiemTraThoiHanHopDong(thoiHan);
-//        assertTrue(hopLe, "Hợp đồng thuê 6 tháng là hợp lệ.");
-//    }
     @Test
     public void testKiemTraThongTin_HopLe() {
         String hoTen = "Nguyen Van A";

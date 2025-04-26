@@ -175,7 +175,7 @@ public class FXMLPhongtroController implements Initializable {
     public void themPhong(ActionEvent e) throws SQLException {
         Phongtro p = new Phongtro(this.addTenphong.getText(), "", Integer.parseInt(this.addGiathue.getText()));
         if (!s.kiemTraThongTinThemPhong(this.addTenphong.getText(), this.addGiathue.getText())) {
-            s.hienThiThongBaoThieuThongTin();
+                MessageBox.getBox("Thêm phòng", "Thêm phòng không thành công!Vui lòng nhập đầy đủ thông tin!", Alert.AlertType.WARNING).show();
             return;
         }
         try {
