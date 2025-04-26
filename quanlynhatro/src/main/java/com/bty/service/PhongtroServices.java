@@ -75,12 +75,10 @@ public class PhongtroServices {
         alert.showAndWait();
     }
     
-    public int chuanHoaThoiHan(int thoiHan) {
-        return thoiHan < 3 ? 3 : thoiHan;
-    }
-    
-    public void troioi(){}
-           
+//    public int chuanHoaThoiHan(int thoiHan) {
+//        return thoiHan < 3 ? 3 : thoiHan;
+//    }
+
     
     public boolean themPhong(Phongtro p) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {

@@ -54,7 +54,6 @@ public class ThanhtoanController implements Initializable {
     private TextField txtTiennuoc;
     @FXML
     private TextField txtPhiphat;
-    
 
     public void loadTableViewPhongDenHan() {
         tbPhongDenHan.setEditable(true);
@@ -86,18 +85,12 @@ public class ThanhtoanController implements Initializable {
                     MessageBox.getBox("Thông báo", "Chỉ số điện mới không được nhỏ hơn chỉ số điện cũ ", Alert.AlertType.WARNING);
                     return;
                 }
-//                p.setChiSoDien(soKiDien);
-//                double giaTienDien = Double.parseDouble(txtTiendien.getText());
-//                double tongTienDien = (p.getChiSoDien() - soKiDienThangTruoc) * giaTienDien;
-//                p.setTienDien(tongTienDien);
                 this.loadTableData(null);
-//                this.tbPhongDenHan.refresh();
             } catch (NumberFormatException e) {
                 System.out.println("Lỗi: Giá tiền điện không hợp lệ!");
             } catch (SQLException ex) {
                 Logger.getLogger(ThanhtoanController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         });
 
         TableColumn<Thanhtoan, Double> colTiennuoc = new TableColumn("Chỉ số nước");
@@ -116,9 +109,6 @@ public class ThanhtoanController implements Initializable {
                     MessageBox.getBox("Thông báo", "Chỉ số nước mới không được nhỏ hơn chỉ số nước cũ ", Alert.AlertType.WARNING);
                     return;
                 }
-//                double giaTienNuoc = Double.parseDouble(txtTiennuoc.getText());
-//                double tongTienNuoc = (p.getChiSoNuoc() - chiSoNuocThangTruoc) * giaTienNuoc;
-//                p.setTienNuoc(tongTienNuoc);
                 this.loadTableData(null);
             } catch (NumberFormatException e) {
                 System.out.println("Lỗi: Giá tiền nước không hợp lệ!");
@@ -223,17 +213,17 @@ public class ThanhtoanController implements Initializable {
         for (Thanhtoan p : tbPhongDenHan.getItems()) {
             int giathue = 0;
             giathue = p.getGiaThue();
-//            double tiendien = (p.getTienDien()!= null) ? p.getTienDien(): 0.0;
             double soKiDienThangTruoc = t.getChiSoDienThangTruoc(p.getMaPhong());
-            double tiendien = (p.getChiSoDien() - soKiDienThangTruoc) * giaTienDien;
-            
+//            double tiendien = (p.getChiSoDien() - soKiDienThangTruoc) * giaTienDien;
+            double tiendien = t.tinhTienDien(p.getChiSoDien(), soKiDienThangTruoc, giaTienDien);
+
             double chiSoNuocThangTruoc = t.getChiSoNuocThangTruoc(p.getMaPhong());
-            double tiennuoc = (p.getChiSoNuoc()-chiSoNuocThangTruoc)*giaTienNuoc;
-            
+//            double tiennuoc = (p.getChiSoNuoc()-chiSoNuocThangTruoc)*giaTienNuoc;
+            double tiennuoc = t.tinhTienNuoc(p.getChiSoNuoc(), chiSoNuocThangTruoc, giaTienNuoc);
+
             double tienphat = (p.getPhiPhat() != null) ? p.getPhiPhat() : 0.0;
-            double tongtien = giathue + tiendien + tiennuoc + tienphat;
+            double tongtien = t.tinhTongTien(giathue, tiendien, tiennuoc, tienphat);
             p.setTongTien(tongtien);
-            
 
             t.updatePhongDenHanToThanhtoan(p);
         }
@@ -246,7 +236,7 @@ public class ThanhtoanController implements Initializable {
         this.tongTien();
         this.tienPhat();
     }
-    
+
     public void back(ActionEvent event) {
         switchScene(event, "primary");
     }
@@ -264,7 +254,6 @@ public class ThanhtoanController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         this.loadTableViewPhongDenHan();
         try {
-
             this.loadTableData(null);
             this.tienPhat();
             this.tongTien();

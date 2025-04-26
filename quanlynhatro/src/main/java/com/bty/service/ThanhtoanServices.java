@@ -55,9 +55,6 @@ public class ThanhtoanServices {
                         rs.getInt("GiaThue"),
                         rs.getString("HoTenNguoiThue"),
                         rs.getDate("NgayDenHan").toLocalDate()
-                //                rs.getInt("PhiPhat"),
-                //                rs.getDouble("TongTien"),
-                //                rs.getString("TrangThaiThanhToan")
                 );
                 results.add(p);
                 capNhatNgayDenHan(p);
@@ -68,14 +65,15 @@ public class ThanhtoanServices {
 
     public void savePhongDenHanToThanhtoan() throws SQLException {
         List<Phongdenhan> phongDenHanList = getPhongDenHan(null); // Lấy danh sách phòng đến hạn
+//        int recordsSaved = 0;
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "INSERT INTO thanhtoan ( MaHopDong,SoTien,"
                     + "NgayThanhToan,PhiPhat,DuNo, NgayDenHan) VALUES (?,?, ?, ?, ?, ?)";
             PreparedStatement stm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            String sql1 = "INSERT INTO chisodiennuoc ( MaPhong, TenPhong, NgayGhi,Mathanhtoan) VALUES (?, ?, ?, ?)";
-
-            PreparedStatement stm1 = conn.prepareCall(sql1);
+//            String sql1 = "INSERT INTO chisodiennuoc ( MaPhong, TenPhong, NgayGhi,Mathanhtoan) VALUES (?, ?, ?, ?)";
+//
+//            PreparedStatement stm1 = conn.prepareCall(sql1);
 
             for (Phongdenhan p : phongDenHanList) {
                 stm.setInt(1, p.getMaHopDong());
@@ -89,26 +87,26 @@ public class ThanhtoanServices {
                     stm.setDate(6, java.sql.Date.valueOf(p.getNgayDenHan()));
                 }
 
-                stm.executeUpdate();
+//                ResultSet MaThanhToan = stm.getGeneratedKeys();
+//                int mathanhtoan = -1;
+//                if (MaThanhToan.next()) {
+//                    mathanhtoan = MaThanhToan.getInt(1);
+//                }
 
-                ResultSet MaThanhToan = stm.getGeneratedKeys();
-                int mathanhtoan = -1;
-                if (MaThanhToan.next()) {
-                    mathanhtoan = MaThanhToan.getInt(1);
-                }
-
-                stm1.setInt(1, p.getMaPhong());
-                stm1.setString(2, p.getTenPhong());
-                if (p.getNgayDenHan() == null) {
-                    stm1.setNull(3, java.sql.Types.DATE);
-                } else {
-                    stm1.setDate(3, java.sql.Date.valueOf(p.getNgayDenHan()));
-                }
-                stm1.setInt(4, mathanhtoan);
-
-                stm1.executeUpdate();
+//                stm1.setInt(1, p.getMaPhong());
+//                stm1.setString(2, p.getTenPhong());
+//                if (p.getNgayDenHan() == null) {
+//                    stm1.setNull(3, java.sql.Types.DATE);
+//                } else {
+//                    stm1.setDate(3, java.sql.Date.valueOf(p.getNgayDenHan()));
+//                }
+//                stm1.setInt(4, mathanhtoan);
+//
+//                stm1.executeUpdate();
+//                recordsSaved++;
             }
         }
+//        return recordsSaved >0;
     }
 
     public List<Thanhtoan> loadPhongDenhan(String kw) throws SQLException {
@@ -263,4 +261,27 @@ public class ThanhtoanServices {
         } catch (SQLException e) {
         }
     }
+
+    public double tinhTienDien(double chiSoDien, double chiSoDienThangTruoc, double giaDien) {
+        if (chiSoDien < chiSoDienThangTruoc) {
+            return -1; // Nếu chỉ số điện mới nhỏ hơn chỉ số điện cũ, trả về -1
+        }
+        return (chiSoDien - chiSoDienThangTruoc) * giaDien;
+    }
+
+    public double tinhTienNuoc(double chiSoNuoc, double chiSoNuocThangTruoc, double giaNuoc) {
+        if (chiSoNuoc < chiSoNuocThangTruoc) {
+            return -1; // Nếu chỉ số nước mới nhỏ hơn chỉ số nước cũ, trả về -1
+        }
+        return (chiSoNuoc - chiSoNuocThangTruoc) * giaNuoc;
+    }
+
+    public double tinhTienPhat(long soNgayTre, double phiPhatMoiNgay) {
+        return soNgayTre * phiPhatMoiNgay;
+    }
+
+    public double tinhTongTien(double giaThue, double tienDien, double tienNuoc, double tienPhat) {
+        return giaThue + tienDien + tienNuoc + tienPhat;
+    }
+
 }

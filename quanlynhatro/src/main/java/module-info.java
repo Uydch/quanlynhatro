@@ -7,6 +7,5 @@ module com.bty.quanlynhatro {
     opens com.bty.quanlynhatro to javafx.fxml;
     exports com.bty.quanlynhatro;
     exports com.bty.service;
-    exports com.bty.pojo;
-
+    exports com.bty.pojo;   
 }

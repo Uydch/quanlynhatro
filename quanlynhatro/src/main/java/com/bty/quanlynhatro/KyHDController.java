@@ -77,8 +77,8 @@ public class KyHDController implements Initializable {
             if (!newValue.isEmpty()) {
                 try {
                     int value = Integer.parseInt(newValue);
-                    PhongtroServices s =new PhongtroServices();
-                    int valueChuan = s.chuanHoaThoiHan(value);
+                    KyHDServices k =new KyHDServices();
+                    int valueChuan = k.chuanHoaThoiHan(value);
                     if (value != valueChuan) {
                         ThoiHan.setText(String.valueOf(valueChuan));
                     }
