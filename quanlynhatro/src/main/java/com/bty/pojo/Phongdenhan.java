@@ -33,8 +33,7 @@ public class Phongdenhan {
         this.HoTenNguoiThue = HoTenNguoiThue;
         this.NgayDenHan = NgayDenHan;
         this.MaHopDong = MaHopDong;
-//        this.TongTien = TongTien;
-//        this.TrangThaiThanhToan = TrangThaiThanhToan;
+
     }
 
     public Double getDuNo() {

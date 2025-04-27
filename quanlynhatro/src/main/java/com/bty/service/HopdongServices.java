@@ -24,15 +24,15 @@ public class HopdongServices {
         List<Hopdong> results = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "SELECT * FROM hopdong";
-//            if (kw != null && !kw.isEmpty()) {
-//                sql += " WHERE TenPhong LIKE concat('%', ?, '%') OR "
-//                        + "TrangThai LIKE concat('%', ?, '%')";
-//            }
+            if (kw != null && !kw.isEmpty()) {
+                sql += " WHERE MaHopDong LIKE concat('%', ?, '%') OR "
+                        + "TrangThai LIKE concat('%', ?, '%')";
+            }
             PreparedStatement stm = conn.prepareCall(sql);
-//            if (kw != null && !kw.isEmpty()) {
-//                stm.setString(1, kw);
-//                stm.setString(2, kw);
-//            }
+            if (kw != null && !kw.isEmpty()) {
+                stm.setString(1, kw);
+                stm.setString(2, kw);
+            }
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Hopdong q = new Hopdong(rs.getInt("MaHopDong"), rs.getInt("MaKhach"), rs.getInt("MaPhong"), rs.getDate("NgayBatDau").toLocalDate(),
@@ -44,33 +44,32 @@ public class HopdongServices {
         return results;
     }
 
-    public void giaHanHopDong(Hopdong h) throws SQLException {
+    public boolean giaHanHopDong(Hopdong h) throws SQLException {
         String sql = "UPDATE hopdong SET NgayDenHanHopDong = ?, TrangThai = ? WHERE MaHopDong = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            // Cập nhật ngày hết hạn hợp đồng mới và trạng thái
-            stmt.setDate(1, java.sql.Date.valueOf(h.getNgayDenHanHopDong()));  // Ngày hết hạn hợp đồng mới
-            stmt.setString(2, h.getTrangThai());  // Trạng thái hợp đồng ("Đã gia hạn")
-            stmt.setInt(3, h.getMaHopDong());  // Mã hợp đồng
+            stmt.setDate(1, java.sql.Date.valueOf(h.getNgayDenHanHopDong()));
+            stmt.setString(2, h.getTrangThai());
+            stmt.setInt(3, h.getMaHopDong());
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Hợp đồng đã được gia hạn.");
+                return true;
             } else {
                 System.out.println("Không tìm thấy hợp đồng để gia hạn.");
+                return false;
             }
         } catch (SQLException ex) {
             System.out.println("Lỗi khi gia hạn hợp đồng: " + ex.getMessage());
-            throw ex;  // Ném ngoại lệ nếu có lỗi
+            throw ex;
         }
     }
 
-    public void updateNgayDenHan(int maHopDong, LocalDate newEndDate) throws SQLException {
+    public boolean updateNgayDenHan(int maHopDong, LocalDate newEndDate) throws SQLException {
         String sql = "UPDATE hopdong SET NgayDenHanHopDong = ?,TrangThai=? WHERE MaHopDong = ?";
-        try (Connection conn = JdbcUtils.getConn(); // Giả sử có lớp DatabaseConnection để lấy kết nối
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // Chuyển LocalDate sang String theo định dạng 'yyyy-MM-dd' nếu cần
             ps.setDate(1, java.sql.Date.valueOf(newEndDate));
             ps.setString(2, "Hiệu lực");
             ps.setInt(3, maHopDong);
@@ -78,8 +77,10 @@ public class HopdongServices {
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Ngày hết hạn hợp đồng đã được cập nhật.");
+                return true;
             } else {
                 System.out.println("Không tìm thấy hợp đồng với mã: " + maHopDong);
+                return false;
             }
         } catch (SQLException e) {
             throw new SQLException("Lỗi khi cập nhật ngày hết hạn hợp đồng: " + e.getMessage(), e);
@@ -93,12 +94,9 @@ public class HopdongServices {
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // Set the contract ID (maHopDong) in the query
             ps.setInt(1, maHopDong);
 
             ResultSet rs = ps.executeQuery();
-
-            // Retrieve the total duNo from the result set
             if (rs.next()) {
                 totalDuNo = rs.getDouble("totalDuNo");
             }
@@ -109,28 +107,28 @@ public class HopdongServices {
         return totalDuNo;
     }
 
-    public void updateTrangThaiTraPhong(int maHopDong, String trangThai) throws SQLException {
+    public boolean updateTrangThaiTraPhong(int maHopDong, String trangThai) throws SQLException {
         String sql = "UPDATE hopdong SET TrangThai = ? WHERE MaHopDong = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // Set các giá trị vào câu truy vấn
             ps.setString(1, trangThai);
             ps.setInt(2, maHopDong);
 
-            // Thực thi câu truy vấn
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Trạng thái hợp đồng đã được cập nhật.");
+                return true;
             } else {
                 System.out.println("Không tìm thấy hợp đồng với mã: " + maHopDong);
+                return false;
             }
         } catch (SQLException e) {
             throw new SQLException("Lỗi khi cập nhật trạng thái hợp đồng: " + e.getMessage(), e);
         }
     }
 
-    public void updateTrangThaiPhong(int maPhong) throws SQLException {
+    public boolean updateTrangThaiPhong(int maPhong) throws SQLException {
         String sql = "UPDATE phongtro SET TrangThai = 'Trống' WHERE MaPhong = ?";
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -139,12 +137,27 @@ public class HopdongServices {
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Trạng thái phòng đã được cập nhật thành 'Trống'.");
+                return true;
             } else {
                 System.out.println("Không tìm thấy phòng với mã: " + maPhong);
+                return false;
             }
         } catch (SQLException e) {
             throw new SQLException("Lỗi khi cập nhật trạng thái phòng: " + e.getMessage(), e);
         }
     }
 
+    public boolean checkUnpaidMonths(int maHopDong) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM ThanhToan WHERE MaHopDong = ? AND TrangThai = 'Chưa thanh toán'";
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maHopDong);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int unpaidMonths = rs.getInt(1);
+                return unpaidMonths > 0; 
+            }
+        }
+        return false;
+    }
+    
 }

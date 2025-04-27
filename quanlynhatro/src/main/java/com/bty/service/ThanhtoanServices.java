@@ -55,9 +55,6 @@ public class ThanhtoanServices {
                         rs.getInt("GiaThue"),
                         rs.getString("HoTenNguoiThue"),
                         rs.getDate("NgayDenHan").toLocalDate()
-                //                rs.getInt("PhiPhat"),
-                //                rs.getDouble("TongTien"),
-                //                rs.getString("TrangThaiThanhToan")
                 );
                 results.add(p);
                 capNhatNgayDenHan(p);
@@ -66,8 +63,9 @@ public class ThanhtoanServices {
         return results;
     }
 
-    public void savePhongDenHanToThanhtoan() throws SQLException {
+    public boolean savePhongDenHanToThanhtoan() throws SQLException {
         List<Phongdenhan> phongDenHanList = getPhongDenHan(null); // Lấy danh sách phòng đến hạn
+        int recordsSaved = 0;
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "INSERT INTO thanhtoan ( MaHopDong,SoTien,"
                     + "NgayThanhToan,PhiPhat,DuNo, NgayDenHan) VALUES (?,?, ?, ?, ?, ?)";
@@ -88,9 +86,7 @@ public class ThanhtoanServices {
                 } else {
                     stm.setDate(6, java.sql.Date.valueOf(p.getNgayDenHan()));
                 }
-
                 stm.executeUpdate();
-
                 ResultSet MaThanhToan = stm.getGeneratedKeys();
                 int mathanhtoan = -1;
                 if (MaThanhToan.next()) {
@@ -107,8 +103,10 @@ public class ThanhtoanServices {
                 stm1.setInt(4, mathanhtoan);
 
                 stm1.executeUpdate();
+                recordsSaved++;
             }
         }
+        return recordsSaved > 0;
     }
 
     public List<Thanhtoan> loadPhongDenhan(String kw) throws SQLException {
@@ -141,8 +139,8 @@ public class ThanhtoanServices {
                 Thanhtoan t = new Thanhtoan(rs.getInt("MaThanhToan"), rs.getInt("MaPhong"), (int) rs.getDouble("SoTien"), rs.getDate("NgayThanhToan"),
                         rs.getInt("MaHopDong"), rs.getString("TenPhong"), rs.getInt("GiaThue"),
                         rs.getString("HoTen"), rs.getDate("NgayDenHan").toLocalDate(),
-                        rs.getDouble("PhiPhat"), rs.getString("TrangThai"), rs.getDouble("DuNo"),rs.getDouble("ChiSoDien"),
-                rs.getDouble("ChiSoNuoc"));
+                        rs.getDouble("PhiPhat"), rs.getString("TrangThai"), rs.getDouble("DuNo"), rs.getDouble("ChiSoDien"),
+                        rs.getDouble("ChiSoNuoc"));
                 results.add(t);
             }
         }
@@ -153,16 +151,21 @@ public class ThanhtoanServices {
         return results;
     }
 
-    public void updatePhongDenHanToThanhtoan(Thanhtoan p) throws SQLException {
+    public boolean updatePhongDenHanToThanhtoan(Thanhtoan p) throws SQLException {
+        if (p.getTongTien() < 0.0 || p.getPhiPhat() < 0.0 || p.getDuNo() < 0.0) {
+            return false;
+        }
+        int r;
         String sql = "UPDATE thanhtoan SET SoTien = ?, PhiPhat = ?,DuNo=? WHERE MaThanhToan = ? ";
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setDouble(1, (p.getTongTien() != null) ? p.getTongTien() : 0.0);
             stm.setDouble(2, (p.getPhiPhat() != null) ? p.getPhiPhat() : 0.0);
-            stm.setDouble(3, (p.getDuNo()!= null) ? p.getDuNo(): 0.0);
+            stm.setDouble(3, (p.getDuNo() != null) ? p.getDuNo() : 0.0);
             stm.setInt(4, p.getMaThanhToan());
-            stm.addBatch(); // Tối ưu hiệu suất
-            stm.executeBatch(); // Thực hiện batch update
+            stm.addBatch();
+            r = stm.executeUpdate();
         }
+        return r > 0;
     }
 
     /**
@@ -170,13 +173,14 @@ public class ThanhtoanServices {
      * @param p
      * @throws SQLException
      */
-    public void capNhatNgayDenHan(Phongdenhan p) throws SQLException {
+    public boolean capNhatNgayDenHan(Phongdenhan p) throws SQLException {
         String sql = "UPDATE hopdong SET NgayDenHan = DATE_ADD(NgayDenHan, INTERVAL ChuKyThanhToan MONTH) WHERE MaHopDong = ?";
-
+        int r;
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, p.getMaHopDong());
-            stm.executeUpdate();
+            r = stm.executeUpdate();
         }
+        return r > 0;
     }
 
     public double getChiSoDienThangTruoc(int MaPhong) {
@@ -215,51 +219,94 @@ public class ThanhtoanServices {
         return chiSoNuocCu;
     }
 
-    public void capNhatTienDien(int maThanhToan, double ChiSoDien) throws SQLException {
+    public boolean capNhatTienDien(int maThanhToan, double ChiSoDien) throws SQLException {
+        int r;
+        if (ChiSoDien < 0) {
+            // Nếu chỉ số nước là số âm, không cho phép cập nhật
+            throw new IllegalArgumentException("Chỉ số nước không thể là số âm");
+        }
         String sql = "UPDATE chisodiennuoc SET ChiSoDien = ? WHERE MaThanhToan = ?";
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stm = conn.prepareStatement(sql)) {
 
             stm.setDouble(1, ChiSoDien);
             stm.setInt(2, maThanhToan);
 
-            stm.executeUpdate(); // Thực hiện UPDATE
+            r = stm.executeUpdate(); // Thực hiện UPDATE
         }
+        return r > 0;
     }
 
-    public void capNhatTienNuoc(int maThanhToan, double ChiSoNuoc) throws SQLException {
+    public boolean capNhatTienNuoc(int maThanhToan, double ChiSoNuoc) throws SQLException {
+        int r;
+        if (ChiSoNuoc < 0) {
+            // Nếu chỉ số nước là số âm, không cho phép cập nhật
+            throw new IllegalArgumentException("Chỉ số nước không thể là số âm");
+        }
         String sql = "UPDATE chisodiennuoc SET ChiSoNuoc = ? WHERE MaThanhToan = ?";
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stm = conn.prepareStatement(sql)) {
 
             stm.setDouble(1, ChiSoNuoc);
             stm.setInt(2, maThanhToan);
 
-            stm.executeUpdate(); 
+            r = stm.executeUpdate();
         }
+        return r > 0;
     }
+
     public Optional<String> getThanhToanAmount(String tenPhong) {
-        // Tạo một hộp thoại nhập số tiền thanh toán
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nhập số tiền thanh toán");
         dialog.setHeaderText("Phòng: " + tenPhong);
         dialog.setContentText("Nhập số tiền:");
         return dialog.showAndWait();
     }
- public void updateThanhToanStatus(int MaThanhToan, String status) {
+
+    public boolean updateThanhToanStatus(int MaThanhToan, String status) {
         String sql = "UPDATE thanhtoan SET TrangThai = ? WHERE MaThanhToan = ?";
-        
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        int rowsAffected = 0;
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, MaThanhToan);
-            
-            // Thực thi câu lệnh
-            int rowsAffected = stmt.executeUpdate();
+            rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Cập nhật trạng thái thanh toán thành công!");
+                return true;
             } else {
                 System.out.println("Không tìm thấy mã thanh toán để cập nhật.");
+                return false;
+
             }
         } catch (SQLException e) {
         }
+        return rowsAffected > 0;
     }
+
+    public double tinhTienDien(double chiSoDien, double chiSoDienThangTruoc, double giaDien) {
+        if (chiSoDien < chiSoDienThangTruoc || chiSoDien < 0) {
+            return -1; // Nếu chỉ số điện mới nhỏ hơn chỉ số điện cũ, trả về -1
+        }
+        return (chiSoDien - chiSoDienThangTruoc) * giaDien;
+    }
+
+    public double tinhTienNuoc(double chiSoNuoc, double chiSoNuocThangTruoc, double giaNuoc) {
+        if (chiSoNuoc < chiSoNuocThangTruoc || chiSoNuoc < 0) {
+            return -1; // Nếu chỉ số nước mới nhỏ hơn chỉ số nước cũ, trả về -1
+        }
+        return (chiSoNuoc - chiSoNuocThangTruoc) * giaNuoc;
+    }
+
+    public double tinhTienPhat(long soNgayTre, double phiPhatMoiNgay) {
+        if (soNgayTre < 0 || phiPhatMoiNgay < 0) {
+            return -1;
+        }
+        return soNgayTre * phiPhatMoiNgay;
+    }
+
+    public double tinhTongTien(double giaThue, double tienDien, double tienNuoc, double tienPhat) {
+        if (giaThue < 0 || tienDien < 0 || tienNuoc < 0 || tienPhat < 0) {
+            return -1;
+        }
+        return giaThue + tienDien + tienNuoc + tienPhat;
+    }
+
 }

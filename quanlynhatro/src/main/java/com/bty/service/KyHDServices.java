@@ -49,26 +49,6 @@ public class KyHDServices {
 //        return results;
 //    }
     //
-    public void gioiHanThoiHanThue(TextField ThoiHan) {
-        ThoiHan.addEventFilter(KeyEvent.KEY_TYPED, event -> {
-            if (!event.getCharacter().matches("[0-9]")) {
-                event.consume();
-            }
-        });
-        ThoiHan.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                try {
-                    int value = Integer.parseInt(newValue);
-                    if (value < 3) {
-                        ThoiHan.setText("3");
-                    }
-                } catch (NumberFormatException e) {
-                    ThoiHan.setText(oldValue);
-                }
-            }
-        });
-    }
-
     public void gioiHanTienCoc(TextField TienCoc) {
         TienCoc.addEventFilter(KeyEvent.KEY_TYPED, event -> {
             if (!event.getCharacter().matches("[0-9]")) {
@@ -83,23 +63,23 @@ public class KyHDServices {
                 event.consume();
             }
         });
-        SoLuong.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                try {
-                    int value = Integer.parseInt(newValue);
-                    if (value < 1) {
-                        SoLuong.setText("3");
-                    }
-
-                } catch (NumberFormatException e) {
-                    SoLuong.setText(oldValue);
-                }
-            }
-        });
+//        SoLuong.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if (!newValue.isEmpty()) {
+//                try {
+//                    int value = Integer.parseInt(newValue);
+//                    if (value < 1) {
+//                        SoLuong.setText("3");
+//                    }
+//
+//                } catch (NumberFormatException e) {
+//                    SoLuong.setText(oldValue);
+//                }
+//            }
+//        });
     }
-    
+
     public boolean kiemTraThongTin(String hoTen, String sdt, String cccd,
-            String diaChi, String tenPhong, String thoiHan, String tienCoc,String SoLuongNguoiThue, boolean CB) {
+            String diaChi, String tenPhong, String thoiHan, String tienCoc, String SoLuongNguoiThue, boolean CB) {
         return !hoTen.trim().isEmpty()
                 && !sdt.trim().isEmpty()
                 && !cccd.trim().isEmpty()
@@ -107,7 +87,7 @@ public class KyHDServices {
                 && !thoiHan.trim().isEmpty()
                 && !tienCoc.trim().isEmpty()
                 && CB
-                &&  !SoLuongNguoiThue.trim().isEmpty()
+                && !SoLuongNguoiThue.trim().isEmpty()
                 && !tenPhong.trim().isEmpty();
     }
 
@@ -121,6 +101,10 @@ public class KyHDServices {
 
     //
     public int luuKhachthue(Khachthue k) throws SQLException {
+        if (k.getHoTen().trim().isEmpty() || k.getCMND().trim().isEmpty() || k.getSDT().trim().isEmpty() || k.getDiaChi().trim().isEmpty()) {
+            System.out.println("Thông tin khách thuê không đầy đủ!");
+            return -1;  
+        }
         String sql = "INSERT INTO khachthue (HoTen, CMND, SDT, DiaChi) VALUES (?, ?, ?, ?)";
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm1 = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -156,7 +140,14 @@ public class KyHDServices {
     }
 
     //
-    public void luuHopDong(Hopdong h) throws SQLException {
+    public boolean luuHopDong(Hopdong h) throws SQLException {
+        if (h.getMaKhach() <= 0 || h.getMaPhong() <= 0 || h.getNgayBatDau() == null || h.getThoiHan() <= 0
+                || h.getSoLuongNguoiThue() <= 0 || h.getChuKyThanhToan() <= 0 || h.getNgayDenHan() == null
+                || h.getNgayDenHanHopDong() == null) {
+            System.out.println("Thông tin hợp đồng không đầy đủ!");
+            return false;
+        }
+        int r = 0;
         try (Connection conn = JdbcUtils.getConn()) {
             conn.setAutoCommit(false);
             PreparedStatement stm3 = conn.prepareStatement("INSERT INTO hopdong (MaKhach, MaPhong,"
@@ -169,16 +160,18 @@ public class KyHDServices {
             stm3.setString(5, "Có hiệu lực");
             stm3.setInt(6, h.getSoLuongNguoiThue());
             stm3.setInt(7, h.getChuKyThanhToan());
-            stm3.setDate(8,h.getNgayDenHan());
-            stm3.setDate(9,java.sql.Date.valueOf(h.getNgayDenHanHopDong()));
+            stm3.setDate(8, h.getNgayDenHan());
+            stm3.setDate(9, java.sql.Date.valueOf(h.getNgayDenHanHopDong()));
             stm3.executeUpdate();
 
             PreparedStatement stm4 = conn.prepareStatement("UPDATE phongtro SET TrangThai = ? WHERE MaPhong = ? ");
-            stm4.setString(1,"Có Người");
-            stm4.setInt(2,h.getMaPhong());
+            stm4.setString(1, "Có Người");
+            stm4.setInt(2, h.getMaPhong());
             stm4.executeUpdate();
             conn.commit();
+            r++;
         }
+        return r > 0;
     }
 
     public void thongBaoThuePhongThanhCong() {
@@ -186,5 +179,9 @@ public class KyHDServices {
         alert.setTitle("Thành Công!");
         alert.setContentText("Hợp đồng thuê phòng lưu thành công!!!");
         alert.showAndWait();
+    }
+
+    public int chuanHoaThoiHan(int thoiHan) {
+        return thoiHan < 3 ? 3 : thoiHan;
     }
 }

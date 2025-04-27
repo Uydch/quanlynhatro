@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import com.bty.service.KyHDServices;
+import com.bty.service.PhongtroServices;
 import java.sql.SQLException;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -65,8 +66,27 @@ public class KyHDController implements Initializable {
     }
 
     private void thoiHanThue() {
-        KyHDServices s = new KyHDServices();
-        s.gioiHanThoiHanThue(ThoiHan);
+        ThoiHan.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (!event.getCharacter().matches("[0-9]")) {
+                event.consume();
+            }
+        });
+
+        // Tự động chuẩn hóa giá trị nếu < 3
+        ThoiHan.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                try {
+                    int value = Integer.parseInt(newValue);
+                    KyHDServices k =new KyHDServices();
+                    int valueChuan = k.chuanHoaThoiHan(value);
+                    if (value != valueChuan) {
+                        ThoiHan.setText(String.valueOf(valueChuan));
+                    }
+                } catch (NumberFormatException e) {
+                    ThoiHan.setText(oldValue);
+                }
+            }
+        });
     }
 
     private void tienCoc() {
@@ -109,7 +129,7 @@ public class KyHDController implements Initializable {
 
         Khachthue k = new Khachthue(this.txtHoTen.getText(),
                 this.txtCCCD.getText(), this.txtSDT.getText(), this.txtDiaChi.getText());
-        Hopdong h = new Hopdong(0,s.luuKhachthue(k), s.maPhongTheoTen(this.txtTenphong.getText()),
+        Hopdong h = new Hopdong(0, s.luuKhachthue(k), s.maPhongTheoTen(this.txtTenphong.getText()),
                 (this.NgayLap.getValue() != null) ? this.NgayLap.getValue() : null,
                 Integer.parseInt(this.ThoiHan.getText()), "", Integer.parseInt(this.SoLuongNguoiThue.getText()),
                 Integer.parseInt(this.ChuKyThanhToan.getText()),
@@ -125,10 +145,3 @@ public class KyHDController implements Initializable {
     }
 
 }
-
-
-
-
-
-
-
