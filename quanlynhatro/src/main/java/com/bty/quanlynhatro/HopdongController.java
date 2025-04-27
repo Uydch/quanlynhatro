@@ -78,32 +78,25 @@ public class HopdongController implements Initializable {
                     try {
                         int monthsToExtend = Integer.parseInt(input); // Số tháng gia hạn
 
-                        // Lấy ngày hiện tại và ngày hết hạn của hợp đồng
                         LocalDate currentDate = LocalDate.now();
-                        LocalDate endDate = h.getNgayDenHanHopDong(); // Giả sử hợp đồng có ngày đến hạn (LocalDate)
+                        LocalDate endDate = h.getNgayDenHanHopDong(); 
 
                         LocalDate newEndDate;
                         if ("Hết hạn".equals(h.getTrangThai())) {
-                            // Nếu hợp đồng đã hết hạn, cộng thêm số tháng vào ngày hiện tại
                             newEndDate = currentDate.plusMonths(monthsToExtend);
                         } else {
-                            // Nếu hợp đồng còn hiệu lực, cộng thêm số tháng vào ngày đến hạn
                             newEndDate = endDate.plusMonths(monthsToExtend);
                         }
 
-                        // Cập nhật ngày hết hạn mới vào cơ sở dữ liệu
                         HopdongServices s = new HopdongServices();
                         s.updateNgayDenHan(h.getMaHopDong(), newEndDate);
 
-                        // Thông báo cập nhật thành công
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ngày hết hạn hợp đồng đã được gia hạn đến: " + newEndDate, ButtonType.OK);
                         alert.showAndWait();
 
-                        // Làm mới bảng dữ liệu (nếu cần)
                         loadTableData(null);
 
                     } catch (NumberFormatException ex) {
-                        // Xử lý khi người dùng nhập không phải số
                         Alert alert = new Alert(Alert.AlertType.ERROR, "Vui lòng nhập số tháng hợp lệ.", ButtonType.OK);
                         alert.showAndWait();
                     } catch (SQLException ex) {
@@ -128,16 +121,15 @@ public class HopdongController implements Initializable {
                 try {
                     HopdongServices s = new HopdongServices();
                     double totalDuNo = s.getTotalDuNo(h.getMaHopDong());
-
-                    if (totalDuNo > 0) {
-                        // Nếu còn dư nợ, không cho phép trả phòng
+                    boolean hasUnpaidMonth = s.checkUnpaidMonths(h.getMaHopDong());
+                    if (totalDuNo > 0||hasUnpaidMonth) {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Cảnh báo");
                         alert.setHeaderText("Không thể trả phòng");
                         alert.setContentText("Hợp đồng này còn dư nợ, vui lòng thanh toán trước khi trả phòng.");
                         alert.showAndWait();
+                        
                     } else {
-                        // Nếu không có dư nợ, hiển thị hộp thoại xác nhận trả phòng
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setTitle("Xác nhận trả phòng");
                         alert.setHeaderText("Bạn có chắc chắn muốn trả phòng này?");
@@ -145,10 +137,8 @@ public class HopdongController implements Initializable {
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.isPresent() && result.get() == ButtonType.OK) {
-                            // Cập nhật trạng thái hợp đồng thành "Đã trả phòng"
                             s.updateTrangThaiTraPhong(h.getMaHopDong(), "Đã trả phòng");
                             s.updateTrangThaiPhong(h.getMaPhong());
-                            // Có thể thực hiện cập nhật bảng hoặc giao diện sau khi trả phòng thành công
                             System.out.println("Trả phòng thành công. Hợp đồng đã được cập nhật.");
                         } else {
                             System.out.println("Trả phòng bị hủy.");

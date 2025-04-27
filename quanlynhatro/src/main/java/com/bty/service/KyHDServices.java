@@ -102,9 +102,8 @@ public class KyHDServices {
     //
     public int luuKhachthue(Khachthue k) throws SQLException {
         if (k.getHoTen().trim().isEmpty() || k.getCMND().trim().isEmpty() || k.getSDT().trim().isEmpty() || k.getDiaChi().trim().isEmpty()) {
-            // Nếu có trường nào trống, trả về -1 hoặc có thể ném ra ngoại lệ
             System.out.println("Thông tin khách thuê không đầy đủ!");
-            return -1;  // Trả về -1 nếu thông tin không hợp lệ
+            return -1;  
         }
         String sql = "INSERT INTO khachthue (HoTen, CMND, SDT, DiaChi) VALUES (?, ?, ?, ?)";
         try (Connection conn = JdbcUtils.getConn()) {

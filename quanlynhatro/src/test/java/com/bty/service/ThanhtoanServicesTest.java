@@ -41,7 +41,7 @@ public class ThanhtoanServicesTest {
     @AfterAll
     public static void aftereAll() throws SQLException {
         if (conn != null) {
-            conn.close(); // Đảm bảo đóng kết nối khi kiểm thử hoàn tất
+            conn.close(); 
         }
     }
 
@@ -77,7 +77,7 @@ public class ThanhtoanServicesTest {
         stmThanhtoan.setInt(2, pdh1.getMaPhong());
         stmThanhtoan.setDate(3, java.sql.Date.valueOf(pdh1.getNgayDenHan()));
         ResultSet rsThanhtoan = stmThanhtoan.executeQuery();
-        assertTrue(rsThanhtoan.next()); // Kiểm tra xem có bản ghi nào được tạo không
+        assertTrue(rsThanhtoan.next()); 
         assertEquals(pdh1.getMaHopDong(), rsThanhtoan.getInt("MaHopDong"));
     }
 
@@ -118,7 +118,6 @@ public class ThanhtoanServicesTest {
         assertEquals(-1, result, 0.001, "Chỉ số điện không thể là số âm");
     }
 
-    // Test phương thức tính tiền nước với chỉ số nước thấp hơn tháng trước
     @Test
     public void testTinhTienNuoc_ChiSoNuocThapHonThangTruoc() {
         double result = s.tinhTienNuoc(85, 90, 1500);
@@ -145,7 +144,6 @@ public class ThanhtoanServicesTest {
 
     @Test
     public void testTinhTienPhat_Am() {
-        // Trường hợp số ngày trễ thanh toán là âm
         double result = s.tinhTienPhat(-5, 10000);
         assertEquals(-1, result, 0.001, "Tiền phạt không thể tính khi số ngày trễ thanh toán âm");
     }
@@ -177,10 +175,10 @@ public class ThanhtoanServicesTest {
         result = s.tinhTongTien(5000.0, -60000.0, 15000.0, 50.0);  // Tiền điện là âm
         assertEquals(-1, result, 0.001, "Tổng tiền không thể là số âm");
 
-        result = s.tinhTongTien(5000.0, 60000.0, -15000.0, 50.0);  // Tiền nước là âm
+        result = s.tinhTongTien(5000.0, 60000.0, -15000.0, 50.0);  
         assertEquals(-1, result, 0.001, "Tổng tiền không thể là số âm");
 
-        result = s.tinhTongTien(5000.0, 60000.0, 15000.0, -50.0);  // Tiền phạt là âm
+        result = s.tinhTongTien(5000.0, 60000.0, 15000.0, -50.0);  
         assertEquals(-1, result, 0.001, "Tổng tiền không thể là số âm");
     }
 
@@ -289,8 +287,6 @@ public class ThanhtoanServicesTest {
     @Test
     public void testCapNhatNgayDenHan() throws SQLException {
         String sql = "SELECT NgayDenHan, ChuKyThanhToan FROM hopdong WHERE MaHopDong = ?";
-
-        // Khai báo hai biến để lưu giá trị Ngày Đến Hạn và Chu Kỳ Thanh Toán
         LocalDate ngayDenHan = null;
         int chuKyThanhToan = 0;
 
