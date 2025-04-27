@@ -5,6 +5,7 @@
 package com.bty.service;
 
 import com.bty.pojo.JdbcUtils;
+import com.bty.pojo.MessageBox;
 import com.bty.pojo.Phongtro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -103,11 +104,44 @@ public class PhongtroServices {
         }
     }
 
-    public boolean xoaPhong(int Maphong) throws SQLException {
-        try (Connection conn = JdbcUtils.getConn()) {
-            PreparedStatement stm = conn.prepareCall("DELETE FROM phongtro WHERE Maphong=?");
-            stm.setInt(1, Maphong);
-            return stm.executeUpdate() > 0;
+//    public boolean xoaPhong(int Maphong) throws SQLException {
+//        try (Connection conn = JdbcUtils.getConn()) {
+//            PreparedStatement stm = conn.prepareCall("DELETE FROM phongtro WHERE Maphong=?");
+//            stm.setInt(1, Maphong);
+//            return stm.executeUpdate() > 0;
+//        }
+//    }
+    
+    public boolean xoaPhong(int maPhong) throws SQLException {
+    String sqlCheck = "SELECT TrangThai FROM phongtro WHERE MaPhong = ?";
+    try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sqlCheck)) {
+        stmt.setInt(1, maPhong);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            String trangThai = rs.getString("TrangThai");
+            if ("Có người".equals(trangThai)) {
+                MessageBox.getBox("Lỗi", "Không thể xóa phòng đang có người thuê!", Alert.AlertType.WARNING);
+                return false; // Không xóa phòng
+            }
+
+            String sqlDelete = "DELETE FROM phongtro WHERE MaPhong = ?";
+            try (PreparedStatement deleteStmt = conn.prepareStatement(sqlDelete)) {
+                deleteStmt.setInt(1, maPhong);
+                int rowsAffected = deleteStmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("Phòng đã được xóa thành công.");
+                    return true; 
+                } else {
+                    System.out.println("Không tìm thấy phòng để xóa.");
+                    return false; // Không tìm thấy phòng
+                }
+            }
+        } else {
+            MessageBox.getBox("Lỗi", "Không tìm thấy phòng trong cơ sở dữ liệu.", Alert.AlertType.ERROR);
+            return false;
         }
     }
+}
 }

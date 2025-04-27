@@ -155,7 +155,7 @@ public class FXMLPhongtroController implements Initializable {
             s.hienThiThongBaoThieuThongTin();
             return;
         }
-        
+
         KyHDController controller = (KyHDController) switchScene(e, "KyHD");
         if (controller != null) {
             controller.setThongTinKhach(
@@ -173,9 +173,26 @@ public class FXMLPhongtroController implements Initializable {
     }
 
     public void themPhong(ActionEvent e) throws SQLException {
+        String giaThueStr = this.addGiathue.getText();
+
+        if (giaThueStr.trim().isEmpty()) {
+            MessageBox.getBox("Lỗi", "Giá thuê không thể để trống!", Alert.AlertType.ERROR);
+            return;
+        }
+        double giaThue = 0.0;
+        try {
+            giaThue = Double.parseDouble(giaThueStr);
+        } catch (NumberFormatException ex) {
+            MessageBox.getBox("Lỗi", "Giá thuê phải là một số hợp lệ!", Alert.AlertType.ERROR).showAndWait();
+            return;
+        }
+        if (giaThue < 0) {
+            MessageBox.getBox("Lỗi", "Giá thuê không thể là số âm!", Alert.AlertType.ERROR).showAndWait();
+            return;
+        }
         Phongtro p = new Phongtro(this.addTenphong.getText(), "", Integer.parseInt(this.addGiathue.getText()));
         if (!s.kiemTraThongTinThemPhong(this.addTenphong.getText(), this.addGiathue.getText())) {
-                MessageBox.getBox("Thêm phòng", "Thêm phòng không thành công!Vui lòng nhập đầy đủ thông tin!", Alert.AlertType.WARNING).show();
+            MessageBox.getBox("Thêm phòng", "Thêm phòng không thành công!Vui lòng nhập đầy đủ thông tin!", Alert.AlertType.WARNING).show();
             return;
         }
         try {

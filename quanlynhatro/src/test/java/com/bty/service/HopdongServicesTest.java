@@ -161,6 +161,7 @@ public class HopdongServicesTest {
         boolean actual = s.updateTrangThaiTraPhong(maHopDong, newStatus);
         assertFalse(actual);
     }
+    
 
     @Test
     @DisplayName("Kiểm tra cập nhật trạng thái phòng")

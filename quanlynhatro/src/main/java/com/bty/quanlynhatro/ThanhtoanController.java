@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -80,13 +81,13 @@ public class ThanhtoanController implements Initializable {
             try {
                 double soKiDien = event.getNewValue();
                 if (soKiDien < 0) {
-                    MessageBox.getBox("Thông báo", "Chỉ số điện không thể là số âm!", Alert.AlertType.WARNING);
+                    MessageBox.getBox("Thông báo", "Chỉ số điện không thể là số âm!", Alert.AlertType.WARNING).showAndWait();
                     return;
                 }
                 t.capNhatTienDien(p.getMaThanhToan(), soKiDien);
                 double soKiDienThangTruoc = t.getChiSoDienThangTruoc(p.getMaPhong());
                 if (soKiDien < soKiDienThangTruoc) {
-                    MessageBox.getBox("Thông báo", "Chỉ số điện mới không được nhỏ hơn chỉ số điện cũ ", Alert.AlertType.WARNING);
+                    MessageBox.getBox("Thông báo", "Chỉ số điện mới không được nhỏ hơn chỉ số điện cũ ", Alert.AlertType.WARNING).showAndWait();
                     return;
                 }
                 this.loadTableData(null);
@@ -102,19 +103,18 @@ public class ThanhtoanController implements Initializable {
         colTiennuoc.setPrefWidth(120);
         colTiennuoc.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         colTiennuoc.setOnEditCommit(event -> {
-            // Cho phép chỉnh sửa TableView
             colTiennuoc.setEditable(true);
             Thanhtoan p = event.getRowValue();
             try {
                 double chiSoNuoc = event.getNewValue();
                 if (chiSoNuoc < 0) {
-                    MessageBox.getBox("Thông báo", "Chỉ số nước không thể là số âm!", Alert.AlertType.WARNING);
+                    MessageBox.getBox("Thông báo", "Chỉ số nước không thể là số âm!", Alert.AlertType.WARNING).showAndWait();
                     return;
                 }
                 t.capNhatTienNuoc(p.getMaThanhToan(), chiSoNuoc);
                 double chiSoNuocThangTruoc = t.getChiSoNuocThangTruoc(p.getMaPhong());
                 if (chiSoNuoc < chiSoNuocThangTruoc) {
-                    MessageBox.getBox("Thông báo", "Chỉ số nước mới không được nhỏ hơn chỉ số nước cũ ", Alert.AlertType.WARNING);
+                    MessageBox.getBox("Thông báo", "Chỉ số nước mới không được nhỏ hơn chỉ số nước cũ ", Alert.AlertType.WARNING).showAndWait();
                     return;
                 }
                 this.loadTableData(null);
@@ -164,7 +164,16 @@ public class ThanhtoanController implements Initializable {
 
                             s.updateThanhToanStatus(p.getMaThanhToan(), "Đã thanh toán " + amount);
                             double soTienThanhToan = Double.parseDouble(amount);
-                            double duNo = p.getTongTien() - soTienThanhToan; // Tính dư nợ
+                            if (soTienThanhToan < 0) {
+                                MessageBox.getBox("Lỗi", "Số tiền thanh toán không thể là số âm!", Alert.AlertType.ERROR).showAndWait();
+                                return;
+                            }
+
+                            if (soTienThanhToan > p.getTongTien()) {
+                                MessageBox.getBox("Lỗi", "Số tiền thanh toán không thể lớn hơn tổng tiền!", Alert.AlertType.ERROR).showAndWait();
+                                return;
+                            }
+                            double duNo = p.getTongTien() - soTienThanhToan;
                             p.setDuNo(duNo);
                             try {
                                 t.updatePhongDenHanToThanhtoan(p);
@@ -193,7 +202,7 @@ public class ThanhtoanController implements Initializable {
     }
 
     private boolean isValidInput(double value) {
-        return value >= 0; // Kiểm tra nếu giá trị nhập vào không phải là số âm
+        return value >= 0;
     }
 
     private void tienPhat() throws SQLException {

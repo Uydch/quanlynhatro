@@ -76,8 +76,11 @@ public class HopdongController implements Initializable {
 
                 dialog.showAndWait().ifPresent(input -> {
                     try {
-                        int monthsToExtend = Integer.parseInt(input); // Số tháng gia hạn
-
+                        int monthsToExtend = Integer.parseInt(input); 
+                        if (monthsToExtend < 0) {
+                                MessageBox.getBox("Lỗi", "Số tháng gia hạn không thể là số âm!", Alert.AlertType.ERROR).showAndWait();
+                                return;
+                            }
                         LocalDate currentDate = LocalDate.now();
                         LocalDate endDate = h.getNgayDenHanHopDong(); 
 
