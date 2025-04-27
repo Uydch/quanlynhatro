@@ -6,6 +6,7 @@ package com.bty.quanlynhatro;
 
 import com.bty.pojo.Hopdong;
 import com.bty.pojo.MessageBox;
+import static com.bty.quanlynhatro.Base.switchScene;
 import com.bty.service.HopdongServices;
 import java.net.URL;
 import java.sql.Date;
@@ -16,6 +17,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -168,6 +170,10 @@ public class HopdongController implements Initializable {
 
     private void loadTableData(String kw) throws SQLException {
         this.tbHopDong.setItems(FXCollections.observableList(h.getHopdong(kw)));
+    }
+    
+    public void backToPhongtro(ActionEvent event) {
+        switchScene(event, "primary");
     }
 
     /**
